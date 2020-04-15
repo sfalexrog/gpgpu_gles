@@ -4,6 +4,8 @@ project(gles_demos)
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
 
+option(OPENGL_DEBUG "Perform OpenGL debugging/error checking" OFF)
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -147,6 +149,11 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   ${OpenCV_LIBS}
   ${catkin_LIBRARIES}
 )
+
+if(OPENGL_DEBUG)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC OPENGL_DEBUG)
+endif()
+
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
