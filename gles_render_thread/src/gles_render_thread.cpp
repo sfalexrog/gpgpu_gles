@@ -431,7 +431,6 @@ bool init(const EglHints& hints)
 void shutdown()
 {
     g_GpuThread.reset();
-    return true;
 }
 
 bool enqueue(CallbackFunction function, void* args, bool runAlways)
