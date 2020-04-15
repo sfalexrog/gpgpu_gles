@@ -1,0 +1,6 @@
+<library path="lib/libgles_demos">
+    <class name="gles_demos/Undistort" type="gles_demos::Undistort" base_class_type="nodelet::Nodelet">
+    <description>
+    </description>
+    </class>
+  </library>
