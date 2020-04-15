@@ -94,6 +94,12 @@ public:
         return *this;
     }
 
+    Shader& setAttrLoc(const char* attrName, GLuint location)
+    {
+        glBindAttribLocation(program, location, attrName);
+        return *this;
+    }
+
     GLint attrLoc(const char* attr) const
     {
         return glGetAttribLocation(program, attr);
