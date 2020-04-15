@@ -1,7 +1,7 @@
 #ifndef GLESIMAGEPROCESSING_TEXTURE_H
 #define GLESIMAGEPROCESSING_TEXTURE_H
 
-#include <GLES3/gl3.h>
+#include <GLES2/gl2.h>
 #include <string>
 
 namespace Gfx

@@ -1,7 +1,7 @@
 #ifndef GLESIMAGEPROCESSING_SHADER_H
 #define GLESIMAGEPROCESSING_SHADER_H
 
-#include <GLES3/gl3.h>
+#include <GLES2/gl2.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>

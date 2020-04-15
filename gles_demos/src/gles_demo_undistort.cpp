@@ -130,7 +130,8 @@ private:
         OGL_CHECKED(glDrawElements(GL_TRIANGLES, mesh_.idxCount, GL_UNSIGNED_INT, nullptr));
 
         OGL_CHECKED(glPixelStorei(GL_PACK_ALIGNMENT, 4));
-        OGL_CHECKED(glPixelStorei(GL_PACK_ROW_LENGTH, result->width));
+        // FIXME: OpenGL ES 3.0+ constant
+        //OGL_CHECKED(glPixelStorei(GL_PACK_ROW_LENGTH, result->width));
         result->header.frame_id = src->header.frame_id;
         OGL_CHECKED(glReadPixels(0, 0, result->width, result->height, GL_RGBA, GL_UNSIGNED_BYTE, result->data.data()));
 

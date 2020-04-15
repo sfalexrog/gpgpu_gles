@@ -1,7 +1,7 @@
 #ifndef GLESIMAGEPROCESSING_MESH_H
 #define GLESIMAGEPROCESSING_MESH_H
 
-#include <GLES3/gl3.h>
+#include <GLES2/gl2.h>
 #include <vector>
 
 namespace Gfx

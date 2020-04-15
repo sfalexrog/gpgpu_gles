@@ -1,8 +1,6 @@
 #include "Texture.h"
 #include <sensor_msgs/image_encodings.h>
 
-#include <GLES2/gl2ext.h>
-
 namespace Gfx
 {
 
