@@ -85,10 +85,8 @@ private:
         // Gfx::Mesh undistMesh = origMesh;
         for (auto& vtx : undistMesh.vertices)
         {
-            NODELET_INFO_STREAM("Initial vpos: " << vtx.vpos[0] << ", " << vtx.vpos[1] << " tex " << vtx.texcoord[0] << ", " << vtx.texcoord[1]);
             vtx.vpos[0] = (2.0f * vtx.vpos[0] / cameraInfo->width) - 1.0f;
             vtx.vpos[1] = (2.0f * vtx.vpos[1] / cameraInfo->height) - 1.0f;
-            NODELET_INFO_STREAM("Resulting vpos: " << vtx.vpos[0] << ", " << vtx.vpos[1]);
         }
         OGL_CHECKED(mesh_ = Gfx::uploadMesh(undistMesh));
         shader_.init()
