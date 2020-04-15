@@ -71,6 +71,10 @@ private:
 
     bool did_init_ = false;
 
+    // Attribute locations
+    const GLuint POSITION_LOC = 0;
+    const GLuint TEXTURE_LOC = 1;
+
     void initData(const sensor_msgs::CameraInfoConstPtr& cameraInfo)
     {
         NODELET_INFO_STREAM("Camera width, height: " << cameraInfo->width << ", " << cameraInfo->height);
@@ -90,7 +94,9 @@ private:
         shader_.init()
             .addStage(GL_VERTEX_SHADER, Gfx::Shaders::undistortVertexShader)
             .addStage(GL_FRAGMENT_SHADER, Gfx::Shaders::undistortFragmentShader)
-            .link();
+            .link()
+            .setAttrLoc("pos", POSITION_LOC)
+            .setAttrLoc("texCoord", TEXTURE_LOC);
     }
 
 
@@ -116,14 +122,11 @@ private:
 
         glUniform1i(shader_.unfLoc("tex"), 0);
 
-        GLint posLoc = shader_.attrLoc("pos");
-        GLint texLoc = shader_.attrLoc("texCoord");
-
         OGL_CHECKED(glBindBuffer(GL_ARRAY_BUFFER, mesh_.vtxBuf));
-        OGL_CHECKED(glEnableVertexAttribArray(posLoc));
-        OGL_CHECKED(glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, sizeof(Gfx::VertexData), (void*)offsetof(Gfx::VertexData, vpos)));
-        OGL_CHECKED(glEnableVertexAttribArray(texLoc));
-        OGL_CHECKED(glVertexAttribPointer(texLoc, 2, GL_FLOAT, GL_FALSE, sizeof(Gfx::VertexData), (void*)offsetof(Gfx::VertexData, texcoord)));
+        OGL_CHECKED(glEnableVertexAttribArray(POSITION_LOC));
+        OGL_CHECKED(glVertexAttribPointer(POSITION_LOC, 2, GL_FLOAT, GL_FALSE, sizeof(Gfx::VertexData), (void*)offsetof(Gfx::VertexData, vpos)));
+        OGL_CHECKED(glEnableVertexAttribArray(TEXTURE_LOC));
+        OGL_CHECKED(glVertexAttribPointer(TEXTURE_LOC, 2, GL_FLOAT, GL_FALSE, sizeof(Gfx::VertexData), (void*)offsetof(Gfx::VertexData, texcoord)));
 
         OGL_CHECKED(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_.idxBuf));
         OGL_CHECKED(glDrawElements(GL_TRIANGLES, mesh_.idxCount, GL_UNSIGNED_INT, nullptr));
