@@ -5,6 +5,8 @@
 #include "gfx/ShaderSources.h"
 #include "gfx/UndistortedMesh.h"
 
+#include "debug/trace.h"
+
 #include <ros/ros.h>
 #include <nodelet/nodelet.h>
 #include <pluginlib/class_list_macros.h>
@@ -77,6 +79,7 @@ private:
 
     void initData(const sensor_msgs::CameraInfoConstPtr& cameraInfo)
     {
+        TRACE_FN;
         NODELET_INFO_STREAM("Camera width, height: " << cameraInfo->width << ", " << cameraInfo->height);
         OGL_CHECKED(fbo_ = Gfx::createFbo(cameraInfo->width, cameraInfo->height));
         OGL_CHECKED(tex_ = Gfx::createTexture(cameraInfo->width, cameraInfo->height, nullptr, GL_RGB));
@@ -100,6 +103,7 @@ private:
 
     void processImage(const sensor_msgs::ImageConstPtr& src, const sensor_msgs::CameraInfoConstPtr& srcCI)
     {
+        TRACE_FN;
         sensor_msgs::ImagePtr result = boost::make_shared<sensor_msgs::Image>();
         result->header = src->header;
         result->width = fbo_.width;
@@ -110,7 +114,7 @@ private:
 
         OGL_CHECKED(glBindFramebuffer(GL_FRAMEBUFFER, fbo_.framebuffer));
         OGL_CHECKED(glViewport(0, 0, fbo_.width, fbo_.height));
-        OGL_CHECKED(glClearColor(1.0f, 0.0f, 0.0f, 1.0f));
+        OGL_CHECKED(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
         OGL_CHECKED(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         OGL_CHECKED(tex_ = Gfx::updateTexture(tex_, src->width, src->height, (void*)src->data.data(), Gfx::glTexFormat(src->encoding)));
 

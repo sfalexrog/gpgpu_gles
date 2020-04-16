@@ -5,6 +5,7 @@ project(gles_demos)
 add_compile_options(-std=c++11)
 
 option(OPENGL_DEBUG "Perform OpenGL debugging/error checking" OFF)
+option(DO_TRACE "Perform rudimentary tracing" OFF)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -152,6 +153,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 if(OPENGL_DEBUG)
   target_compile_definitions(${PROJECT_NAME} PUBLIC OPENGL_DEBUG)
+endif()
+if(DO_TRACE)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC DO_TRACE)
 endif()
 
 ## Declare a C++ executable
