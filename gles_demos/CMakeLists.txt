@@ -139,6 +139,7 @@ set_target_properties(Gfx PROPERTIES POSITION_INDEPENDENT_CODE ON)
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
   src/gles_demo_undistort.cpp
+  src/gles_demo_sobel.cpp
 )
 
 ## Add cmake target dependencies of the library

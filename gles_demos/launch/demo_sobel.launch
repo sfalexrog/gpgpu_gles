@@ -1,0 +1,24 @@
+<launch>
+    <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}]: ${logger}: ${message}"/>
+    <node pkg="nodelet" type="nodelet" name="camera_manager" args="manager" output="screen" if="true"/>
+
+    <node pkg="nodelet" type="nodelet" name="cv_camera" args="load cv_camera/CvCameraNodelet camera_manager" output="screen">
+        <param name="frame_id" value="front_camera_optical"/>
+        <param name="camera_info_url" value="file:///home/sf/calib_images/calibration.yaml"/>
+        <param name="device_id" value="0"/>
+        <param name="rescale_camera_info" value="true"/> <!-- automatically rescale camera calibration info -->
+
+        <!-- camera resolution, NOTE: camera_info file should match it -->
+        <param name="image_width" value="848"/>
+        <param name="image_height" value="480"/>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="sobel" args="load gles_demos/Sobel camera_manager" output="screen" if="true">
+        <remap from="image_raw" to="cv_camera/image_raw"/>
+        <remap from="camera_info" to="cv_camera/camera_info"/>
+        <!-- Mesh subdivision parameters: finer meshes should yield better undistortion results, but may be more resource-intensive -->
+        <param name="subdiv_x" value="2"/>
+        <param name="subdiv_y" value="2"/>
+        <param name="use_cv_impl" value="false"/>
+    </node>
+</launch>
