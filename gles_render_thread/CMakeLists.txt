@@ -169,6 +169,11 @@ add_executable(gles_thread_test
 )
 target_link_libraries(gles_thread_test PUBLIC ${PROJECT_NAME})
 
+add_executable(gles_hwinfo
+  src/test/gles_hwinfo.cpp
+)
+target_link_libraries(gles_hwinfo PUBLIC ${PROJECT_NAME})
+
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
