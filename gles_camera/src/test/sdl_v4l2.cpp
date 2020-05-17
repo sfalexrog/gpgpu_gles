@@ -158,10 +158,10 @@ struct Buffers
 Buffers createBuffers(const v4l2_pix_format &fmt)
 {
     GlData data[] {
-        {1, -1,  0,         0},
-        {1,  1,  0,         fmt.height},
-        {-1, -1, fmt.width, 0},
-        {-1, 1,  fmt.width, fmt.height}
+        {1, -1,  fmt.width,         fmt.height},
+        {1,  1,  fmt.width,         0},
+        {-1, -1, 0, fmt.height},
+        {-1, 1,  0, 0}
     };
     GLuint elements[] = {
         0, 1, 2,
