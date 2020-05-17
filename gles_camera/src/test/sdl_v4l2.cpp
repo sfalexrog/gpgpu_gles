@@ -86,9 +86,9 @@ uniform vec2 texelSize;
 vec3 yuv2rgb(in vec3 yuv)
 {
     return vec3(
-        max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) + 1.7927 * (yuv.g - 0.5))),
-        max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) - 0.2132 * (yuv.g - 0.5) - 0.5329 * (yuv.b))),
-        max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) + 2.1124 * (yuv.b - 0.5)))
+        max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) + 1.596  * (yuv.b - 0.5))),
+        max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) - 0.3918 * (yuv.b - 0.5) - 0.813 * (yuv.g - 0.5))),
+        max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) + 2.0172 * (yuv.g - 0.5)))
     );
 }
 
@@ -109,7 +109,7 @@ void main()
     }
     //gl_FragColor = vec4(texture2D(tex_yuyv, thisTexelPos).rrr, 1.0);
 
-    gl_FragColor = vec4(yuv2rgb(ycrcb).bgr, 1.0);
+    gl_FragColor = vec4(yuv2rgb(ycrcb), 1.0);
     //gl_FragColor = vec4(ycrcb, 1.0);
 }
 )fragment_shader";
