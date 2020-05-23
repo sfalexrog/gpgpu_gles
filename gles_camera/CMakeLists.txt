@@ -8,9 +8,27 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package()
 
+# Try to find libv4l (it's not strictly needed, but is useful for debugging puproses)
+find_library(_V4L_LIB v4l2)
+find_path(_V4L_INCLUDE libv4l2.h)
+
+if (_V4L_LIB AND _V4L_INCLUDE)
+  add_library(V4l INTERFACE)
+  target_link_libraries(V4l INTERFACE ${_V4L_LIB})
+  target_include_directories(V4l INTERFACE ${_V4L_INCLUDE})
+endif()
+
 add_library(v4l2device STATIC
   src/v4l2device.cpp
 )
+
+if (TARGET V4l)
+  message(STATUS "Building with libv4l (debug purposes only)")
+  target_link_libraries(v4l2device PUBLIC V4l)
+  target_compile_definitions(v4l2device PRIVATE WITH_LIBV4L)
+else()
+  message(STATUS "Building without libv4l")
+endif()
 
 add_executable(v4l2info src/test/v4l2info.cpp)
 

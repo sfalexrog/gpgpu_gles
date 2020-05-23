@@ -9,6 +9,19 @@
 
 #include "log.h"
 
+#ifdef WITH_LIBV4L
+// Use libv4l2 to automagically convert between more formats
+// (more for development purposes, really)
+#include <libv4l2.h>
+#else
+// Since libv4l2 functions are interface-compatible, we resort to a simple hack for names
+#define v4l2_open open
+#define v4l2_ioctl ioctl
+#define v4l2_close close
+#define v4l2_read read
+#define v4l2_mmap mmap
+#define v4l2_munmap munmap
+#endif // WITH_LIBV4L
 
 namespace
 {
@@ -27,7 +40,7 @@ int xioctl(int fd, int request, void *arg)
     int retval;
 
     do {
-        retval = ioctl(fd, request, arg);
+        retval = v4l2_ioctl(fd, request, arg);
     } while (-1 == retval && EINTR == errno);
 
     return retval;
@@ -113,7 +126,7 @@ bool V4L2Device::requestBuffers(uint32_t bufferCount)
             LOG(DEBUG) << "MMAPping buffer " << i << " with length: " << buf.length << ", offset: " << buf.m.offset; 
 
             buffers[i].length = buf.length;
-            buffers[i].start = mmap(nullptr,
+            buffers[i].start = v4l2_mmap(nullptr,
                 buf.length,
                 PROT_READ | PROT_WRITE,
                 MAP_SHARED,
@@ -240,7 +253,7 @@ bool V4L2Device::init()
         return true;
     }
     LOG_FUNC(DEBUG) << "Initializing device";
-    fd = open(deviceName.c_str(), O_RDWR | O_NONBLOCK, 0);
+    fd = v4l2_open(deviceName.c_str(), O_RDWR | O_NONBLOCK, 0);
 
     if (-1 == fd)
     {
@@ -251,7 +264,7 @@ bool V4L2Device::init()
     auto queryCapResult = queryCap();
     if (!queryCapResult.first)
     {
-        close(fd);
+        v4l2_close(fd);
         fd = -1;
         return false;
     }
@@ -263,7 +276,7 @@ bool V4L2Device::init()
     if (!(capabilities.capabilities & V4L2_CAP_VIDEO_CAPTURE))
     {
         LOG_FUNC(ERROR) << "Device " << deviceName << " does not expose video capturing capabilities";
-        close(fd);
+        v4l2_close(fd);
         fd = -1;
         return false;
     }
@@ -565,7 +578,7 @@ V4L2Device::~V4L2Device()
             case CaptureMethod::Mmap:
                 for(auto& buffer : buffers)
                 {
-                    if (-1 == munmap(buffer.start, buffer.length))
+                    if (-1 == v4l2_munmap(buffer.start, buffer.length))
                     {
                         LOG_FUNC(ERROR) << "Something went wrong while unmapping buffer, but won't do anything about it";
                     }
@@ -578,7 +591,7 @@ V4L2Device::~V4L2Device()
     LOG_FUNC(DEBUG) << "Destroying V4L2 device";
     if (fd != -1)
     {
-        close(fd);
+        v4l2_close(fd);
     }
 }
 
