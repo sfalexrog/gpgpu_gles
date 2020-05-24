@@ -83,12 +83,30 @@ uniform sampler2D tex_yuyv; // Interpreted as LUMINANCE_ALPHA
 uniform vec2 texelSize;
 
 
-vec3 yuv2rgb(in vec3 yuv)
+vec3 yuv2rgb_bt601(in vec3 yuv)
 {
     return vec3(
         max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) + 1.596  * (yuv.b - 0.5))),
         max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) - 0.3918 * (yuv.b - 0.5) - 0.813 * (yuv.g - 0.5))),
         max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) + 2.0172 * (yuv.g - 0.5)))
+    );
+}
+
+vec3 yuv2rgb_bt709(in vec3 yuv)
+{
+    return vec3(
+        max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) + 1.7927 * (yuv.b - 0.5))),
+        max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) - 0.2132 * (yuv.b - 0.5) - 0.5329 * (yuv.g - 0.5))),
+        max(0.0, min(1.0, 1.164 * (yuv.r - 0.0627) + 2.1124 * (yuv.g - 0.5)))
+    );
+}
+
+vec3 yuv2rgb_t871(in vec3 yuv)
+{
+    return vec3(
+        max(0.0, min(1.0, 1.0 * (yuv.r) + 1.402  * (yuv.b - 0.5))),
+        max(0.0, min(1.0, 1.0 * (yuv.r) - 0.3441 * (yuv.b - 0.5) - 0.7141 * (yuv.g - 0.5))),
+        max(0.0, min(1.0, 1.0 * (yuv.r) + 1.772 * (yuv.g - 0.5)))
     );
 }
 
@@ -109,7 +127,7 @@ void main()
     }
     //gl_FragColor = vec4(texture2D(tex_yuyv, thisTexelPos).rrr, 1.0);
 
-    gl_FragColor = vec4(yuv2rgb(ycrcb), 1.0);
+    gl_FragColor = vec4(yuv2rgb_t871(ycrcb), 1.0);
     //gl_FragColor = vec4(ycrcb, 1.0);
 }
 )fragment_shader";
